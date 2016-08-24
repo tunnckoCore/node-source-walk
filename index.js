@@ -49,18 +49,18 @@ module.exports.prototype.parse = function(src, options) {
  * Executes cb on a non-array AST node
  */
 module.exports.prototype.traverse = function(node, cb) {
-  var that = this;
-
   if (this.shouldStop) { return; }
 
-  if (Array.isArray(node)) {
-    node.forEach(function(x) {
+  if (node && node.constructor === Array) {
+    for (var i = 0, l = node.length; i < l; i++) {
+      var x = node[i];
+
       if (x !== null) {
         // Mark that the node has been visited
         x.parent = node;
-        that.traverse(x, cb);
+        this.traverse(x, cb);
       }
-    });
+    }
 
   } else if (node && typeof node === 'object') {
     cb(node);
